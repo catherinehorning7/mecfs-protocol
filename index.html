@@ -3,1185 +3,365 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ME/CFS Stabilization Protocol</title>
-<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Drive Organizer</title>
 <style>
-  :root {
-    --teal-dark: #085041;
-    --teal-mid: #0F6E56;
-    --teal-soft: #1D9E75;
-    --teal-light: #9FE1CB;
-    --teal-pale: #E1F5EE;
-    --amber-dark: #633806;
-    --amber-mid: #854F0B;
-    --amber-soft: #BA7517;
-    --amber-light: #FAC775;
-    --amber-pale: #FAEEDA;
-    --purple-dark: #3C3489;
-    --purple-mid: #534AB7;
-    --purple-soft: #7F77DD;
-    --purple-light: #CECBF6;
-    --purple-pale: #EEEDFE;
-    --gray-900: #2C2C2A;
-    --gray-700: #5F5E5A;
-    --gray-500: #888780;
-    --gray-200: #D3D1C7;
-    --gray-50: #F1EFE8;
-    --bg: #FAFAF8;
-    --text: #2C2C2A;
-    --text-muted: #5F5E5A;
-    --sidebar-w: 260px;
-    --content-max: 760px;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; font-size: 18px; }
-
-  body {
-    font-family: 'Source Sans 3', sans-serif;
-    font-weight: 400;
-    line-height: 1.75;
-    color: var(--text);
-    background: var(--bg);
-  }
-
-  /* ── LAYOUT ── */
-  .layout {
-    display: flex;
-    min-height: 100vh;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-    gap: 3rem;
-  }
-
-  /* ── SIDEBAR ── */
-  .sidebar {
-    width: var(--sidebar-w);
-    flex-shrink: 0;
-    padding: 2.5rem 0;
-  }
-
-  .toc-sticky {
-    position: sticky;
-    top: 2rem;
-    max-height: calc(100vh - 4rem);
-    overflow-y: auto;
-  }
-
-  .toc-title {
-    font-family: 'Lora', serif;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--gray-500);
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--gray-200);
-  }
-
-  .toc-list { list-style: none; }
-
-  .toc-list li { margin: 0; }
-
-  .toc-list a {
-    display: block;
-    padding: 0.3rem 0.75rem;
-    font-size: 0.82rem;
-    font-weight: 400;
-    color: var(--text-muted);
-    text-decoration: none;
-    border-left: 2px solid transparent;
-    line-height: 1.4;
-    transition: color 0.15s, border-color 0.15s;
-  }
-
-  .toc-list a:hover { color: var(--teal-mid); border-left-color: var(--teal-light); }
-  .toc-list a.active { color: var(--teal-dark); border-left-color: var(--teal-soft); font-weight: 500; }
-
-  .toc-section { margin-top: 0.75rem; }
-  .toc-section > a {
-    font-weight: 500;
-    color: var(--text);
-    font-size: 0.85rem;
-  }
-
-  .toc-sub { padding-left: 0.5rem; }
-  .toc-sub a { font-size: 0.78rem; }
-
-  /* ── MAIN CONTENT ── */
-  main {
-    flex: 1;
-    min-width: 0;
-    padding: 2.5rem 0 5rem;
-    max-width: var(--content-max);
-  }
-
-  /* ── HERO ── */
-  .hero {
-    margin-bottom: 3rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--gray-200);
-  }
-
-  .hero-badge {
-    display: inline-block;
-    background: var(--teal-pale);
-    color: var(--teal-dark);
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.3rem 0.75rem;
-    border-radius: 3px;
-    margin-bottom: 1rem;
-  }
-
-  .hero h1 {
-    font-family: 'Lora', serif;
-    font-size: 2rem;
-    font-weight: 600;
-    line-height: 1.25;
-    color: var(--gray-900);
-    margin-bottom: 1rem;
-  }
-
-  .hero-subtitle {
-    font-size: 1rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    max-width: 560px;
-  }
-
-  .hero-note {
-    margin-top: 1.25rem;
-    padding: 0.875rem 1.25rem;
-    background: var(--amber-pale);
-    border-left: 3px solid var(--amber-soft);
-    border-radius: 0 4px 4px 0;
-    font-size: 0.85rem;
-    color: var(--amber-dark);
-    line-height: 1.5;
-  }
-
-  /* ── LAYER HEADINGS ── */
-  .layer-header {
-    margin: 2.5rem 0 1.25rem;
-    padding: 1.25rem 1.5rem;
-    border-radius: 6px;
-  }
-
-  .layer-header.foundation { background: var(--teal-pale); border-left: 4px solid var(--teal-soft); }
-  .layer-header.regulatory { background: var(--purple-pale); border-left: 4px solid var(--purple-soft); }
-  .layer-header.support { background: var(--amber-pale); border-left: 4px solid var(--amber-soft); }
-
-  .layer-label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 0.3rem;
-  }
-
-  .layer-header.foundation .layer-label { color: var(--teal-mid); }
-  .layer-header.regulatory .layer-label { color: var(--purple-mid); }
-  .layer-header.support .layer-label { color: var(--amber-mid); }
-
-  .layer-header h2 {
-    font-family: 'Lora', serif;
-    font-size: 1.3rem;
-    font-weight: 600;
-    line-height: 1.3;
-  }
-
-  .layer-header.foundation h2 { color: var(--teal-dark); }
-  .layer-header.regulatory h2 { color: var(--purple-dark); }
-  .layer-header.support h2 { color: var(--amber-dark); }
-
-  .layer-header .purpose {
-    margin-top: 0.4rem;
-    font-size: 0.88rem;
-    line-height: 1.5;
-  }
-
-  .layer-header.foundation .purpose { color: var(--teal-mid); }
-  .layer-header.regulatory .purpose { color: var(--purple-mid); }
-  .layer-header.support .purpose { color: var(--amber-mid); }
-
-  /* ── STEP CARDS ── */
-  .step-card {
-    margin-bottom: 1rem;
-    border: 1px solid var(--gray-200);
-    border-radius: 8px;
-    overflow: hidden;
-    background: #fff;
-  }
-
-  .step-toggle {
-    width: 100%;
-    text-align: left;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 1rem 1.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  .step-toggle:hover { background: var(--gray-50); }
-
-  .step-toggle-left {
-    display: flex;
-    align-items: center;
-    gap: 0.875rem;
-  }
-
-  .step-num {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-    font-weight: 600;
-    flex-shrink: 0;
-  }
-
-  .foundation .step-num { background: var(--teal-light); color: var(--teal-dark); }
-  .regulatory .step-num { background: var(--purple-light); color: var(--purple-dark); }
-  .support .step-num { background: var(--amber-light); color: var(--amber-dark); }
-
-  .step-title {
-    font-family: 'Lora', serif;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.3;
-  }
-
-  .step-summary {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-top: 0.15rem;
-  }
-
-  .chevron {
-    width: 18px;
-    height: 18px;
-    color: var(--gray-500);
-    flex-shrink: 0;
-    transition: transform 0.2s;
-  }
-
-  .step-card.open .chevron { transform: rotate(180deg); }
-
-  .step-body {
-    display: none;
-    padding: 0 1.25rem 1.25rem;
-    border-top: 1px solid var(--gray-200);
-  }
-
-  .step-card.open .step-body { display: block; }
-
-  /* ── CONTENT WITHIN STEPS ── */
-  .sub-section { margin-top: 1.25rem; }
-
-  .sub-heading {
-    font-family: 'Lora', serif;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 0.5rem;
-    padding-bottom: 0.35rem;
-    border-bottom: 1px solid var(--gray-200);
-  }
-
-  .field-label {
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin: 0.875rem 0 0.35rem;
-  }
-
-  ul.bullets {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  ul.bullets li {
-    font-size: 0.88rem;
-    line-height: 1.6;
-    color: var(--text);
-    padding: 0.2rem 0 0.2rem 1.1rem;
-    position: relative;
-  }
-
-  ul.bullets li::before {
-    content: '–';
-    position: absolute;
-    left: 0;
-    color: var(--gray-500);
-  }
-
-  .note-box {
-    margin-top: 0.75rem;
-    padding: 0.75rem 1rem;
-    border-radius: 5px;
-    font-size: 0.83rem;
-    line-height: 1.55;
-  }
-
-  .note-box.caution { background: var(--amber-pale); color: var(--amber-dark); }
-  .note-box.info { background: var(--teal-pale); color: var(--teal-dark); }
-  .note-box.synergy { background: var(--purple-pale); color: var(--purple-dark); }
-
-  .note-box strong { font-weight: 600; }
-
-  /* ── LOGIC SECTION ── */
-  .logic-block {
-    margin-top: 1.5rem;
-    padding: 1.25rem 1.5rem;
-    background: var(--gray-50);
-    border-radius: 6px;
-  }
-
-  .logic-block h3 {
-    font-family: 'Lora', serif;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: var(--text);
-  }
-
-  .flow-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .flow-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    font-size: 0.85rem;
-    line-height: 1.5;
-  }
-
-  .flow-arrow {
-    font-size: 0.7rem;
-    color: var(--gray-500);
-    padding-top: 0.1rem;
-    flex-shrink: 0;
-  }
-
-  /* ── WORKING HYPOTHESIS ── */
-  .hypothesis {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--gray-200);
-  }
-
-  .hypothesis h2 {
-    font-family: 'Lora', serif;
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--gray-900);
-    margin-bottom: 0.75rem;
-  }
-
-  .hypothesis p {
-    font-size: 0.9rem;
-    line-height: 1.7;
-    color: var(--text);
-    margin-bottom: 0.75rem;
-  }
-
-  .citation-box {
-    margin: 1rem 0;
-    padding: 0.875rem 1.1rem;
-    background: var(--gray-50);
-    border-left: 3px solid var(--gray-200);
-    border-radius: 0 4px 4px 0;
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
-
-  .danger-state {
-    margin-top: 1.25rem;
-    padding: 1rem 1.25rem;
-    background: #fff;
-    border: 1px solid var(--gray-200);
-    border-radius: 6px;
-  }
-
-  .danger-state h3 {
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 0.6rem;
-    color: var(--text);
-  }
-
-  /* ── SEQUENCE BLOCK ── */
-  .sequence {
-    margin-top: 1.5rem;
-    padding: 1.25rem 1.5rem;
-    background: var(--teal-pale);
-    border-radius: 6px;
-  }
-
-  .sequence h3 {
-    font-family: 'Lora', serif;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--teal-dark);
-    margin-bottom: 0.75rem;
-  }
-
-  .seq-row {
-    display: flex;
-    gap: 0.75rem;
-    align-items: flex-start;
-    margin-bottom: 0.5rem;
-    font-size: 0.85rem;
-    line-height: 1.5;
-    color: var(--teal-dark);
-  }
-
-  .seq-tag {
-    flex-shrink: 0;
-    background: var(--teal-light);
-    color: var(--teal-dark);
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 0.2rem 0.5rem;
-    border-radius: 3px;
-    white-space: nowrap;
-    margin-top: 0.1rem;
-  }
-
-  /* ── FOOTER ── */
-  footer {
-    margin-top: 3rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--gray-200);
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
-
-  /* ── MOBILE ── */
-  .mobile-toc {
-    display: none;
-    margin-bottom: 2rem;
-    border: 1px solid var(--gray-200);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .mobile-toc-toggle {
-    width: 100%;
-    padding: 0.875rem 1.25rem;
-    background: var(--gray-50);
-    border: none;
-    cursor: pointer;
-    text-align: left;
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: var(--text);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .mobile-toc-body {
-    display: none;
-    padding: 0.75rem 1.25rem 1rem;
-    background: #fff;
-  }
-
-  .mobile-toc.open .mobile-toc-body { display: block; }
-  .mobile-toc.open .chevron { transform: rotate(180deg); }
-
-  .mobile-toc-body a {
-    display: block;
-    padding: 0.3rem 0;
-    font-size: 0.85rem;
-    color: var(--teal-mid);
-    text-decoration: none;
-  }
-
-  .mobile-toc-body a:hover { color: var(--teal-dark); }
-  .mobile-toc-body .toc-indent { padding-left: 1rem; font-size: 0.8rem; color: var(--text-muted); }
-
-  @media (max-width: 750px) {
-    .layout { flex-direction: column; gap: 0; padding: 0 1rem; }
-    .sidebar { display: none; }
-    .mobile-toc { display: block; }
-    main { padding: 1.5rem 0 4rem; }
-    .hero h1 { font-size: 1.5rem; }
-    html { font-size: 17px; }
-  }
-
-  @media print {
-    .sidebar, .mobile-toc, .step-toggle .chevron { display: none; }
-    .step-body { display: block !important; }
-    .layout { max-width: 100%; padding: 0; }
-    main { padding: 0; }
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #f8f7f4; color: #1a1a1a; min-height: 100vh; padding: 2rem; }
+  h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.25rem; }
+  .subtitle { color: #666; font-size: 0.9rem; margin-bottom: 2rem; }
+  .card { background: white; border-radius: 12px; border: 0.5px solid #e0ddd8; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .card h2 { font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px; }
+  .step-num { width: 24px; height: 24px; background: #1a1a1a; color: white; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .step-num.done { background: #2d7d4e; }
+  code { background: #f1efe8; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.85rem; }
+  input[type="text"] { width: 100%; padding: 10px 12px; border: 0.5px solid #ccc; border-radius: 8px; font-size: 0.9rem; margin-top: 0.5rem; }
+  input[type="text"]:focus { outline: none; border-color: #1a1a1a; }
+  button { padding: 10px 20px; border-radius: 8px; border: 0.5px solid #ccc; background: white; font-size: 0.9rem; cursor: pointer; transition: background 0.15s; }
+  button:hover { background: #f1efe8; }
+  button.primary { background: #1a1a1a; color: white; border-color: #1a1a1a; }
+  button.primary:hover { background: #333; }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-row { display: flex; gap: 10px; margin-top: 1rem; flex-wrap: wrap; }
+  .log { background: #f8f7f4; border-radius: 8px; padding: 1rem; font-family: monospace; font-size: 0.82rem; max-height: 280px; overflow-y: auto; line-height: 1.7; }
+  .log .ok { color: #2d7d4e; }
+  .log .err { color: #c0392b; }
+  .log .info { color: #666; }
+  .log .head { color: #1a1a1a; font-weight: 600; }
+  .plan-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 0.75rem; }
+  .plan-table th { text-align: left; padding: 6px 10px; border-bottom: 1px solid #e0ddd8; color: #666; font-weight: 500; }
+  .plan-table td { padding: 6px 10px; border-bottom: 0.5px solid #f0ede8; vertical-align: top; }
+  .plan-table tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.75rem; font-weight: 500; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-green { background: #dcfce7; color: #166534; }
+  .badge-amber { background: #fef3c7; color: #92400e; }
+  .badge-red { background: #fee2e2; color: #991b1b; }
+  .badge-purple { background: #ede9fe; color: #5b21b6; }
+  .badge-gray { background: #f1efe8; color: #555; }
+  .progress-bar { height: 6px; background: #e0ddd8; border-radius: 3px; margin-top: 0.5rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: #1a1a1a; border-radius: 3px; transition: width 0.3s; }
+  .hidden { display: none; }
+  ol { padding-left: 1.2rem; }
+  ol li { margin-bottom: 0.4rem; font-size: 0.88rem; line-height: 1.6; }
+  a { color: #1a1a1a; }
+  .warn { background: #fef3c7; border-left: 3px solid #f59e0b; padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; font-size: 0.875rem; margin-top: 0.75rem; }
 </style>
 </head>
 <body>
 
-<div class="layout">
+<h1>Google Drive Organizer</h1>
+<p class="subtitle">Reads your Drive, classifies files by topic, creates folders, and moves everything automatically.</p>
 
-  <!-- SIDEBAR TOC -->
-  <aside class="sidebar" aria-label="Table of contents">
-    <nav class="toc-sticky">
-      <p class="toc-title">Contents</p>
-      <ul class="toc-list">
-        <li><a href="#overview">Overview</a></li>
-        <li class="toc-section">
-          <a href="#foundation">Layer 1 — Foundation</a>
-          <ul class="toc-sub toc-list">
-            <li><a href="#f1">Physical stability</a></li>
-            <li><a href="#f2">Sensory &amp; environment</a></li>
-            <li><a href="#f3">Sense of safety</a></li>
-          </ul>
-        </li>
-        <li class="toc-section">
-          <a href="#regulatory">Layer 2 — Regulatory</a>
-          <ul class="toc-sub toc-list">
-            <li><a href="#r1">Nervous system signaling</a></li>
-            <li><a href="#r2">Neuroimmune regulation</a></li>
-            <li><a href="#r3">Adaptogens &amp; gut</a></li>
-          </ul>
-        </li>
-        <li class="toc-section">
-          <a href="#support">Layer 3 — Support</a>
-          <ul class="toc-sub toc-list">
-            <li><a href="#s1">Mitochondrial energy</a></li>
-            <li><a href="#s2">Antioxidant / glutathione</a></li>
-            <li><a href="#s3">Lymphatic &amp; detox</a></li>
-            <li><a href="#s4">Vitamin D &amp; seasonal</a></li>
-          </ul>
-        </li>
-        <li class="toc-section">
-          <a href="#hypothesis">Working hypothesis</a>
-        </li>
-      </ul>
-    </nav>
-  </aside>
+<!-- Step 1: Setup -->
+<div class="card" id="card-setup">
+  <h2><span class="step-num" id="num1">1</span> Google Cloud setup — one time only</h2>
+  <p style="font-size:0.88rem; color:#444; line-height:1.6; margin-bottom:0.75rem;">
+    This tool needs a free Google Cloud client ID to access your Drive. Takes about 5 minutes:
+  </p>
+  <ol>
+    <li>Go to <a href="https://console.cloud.google.com/apis/credentials" target="_blank">console.cloud.google.com/apis/credentials</a></li>
+    <li>Create a project (or pick an existing one)</li>
+    <li>Click <strong>+ Create Credentials → OAuth client ID</strong></li>
+    <li>Application type: <strong>Web application</strong></li>
+    <li>Under "Authorized JavaScript origins", add: <code id="origin-display"></code></li>
+    <li>Click Create — copy the <strong>Client ID</strong> (ends in <code>.apps.googleusercontent.com</code>)</li>
+    <li>Also enable the <strong>Google Drive API</strong> at <a href="https://console.cloud.google.com/apis/library/drive.googleapis.com" target="_blank">this link</a></li>
+    <li>Under OAuth consent screen, add your own Google email as a test user</li>
+  </ol>
+  <div class="warn">The client ID is not a secret — it's safe to paste here. It only works from this exact page origin.</div>
+  <input type="text" id="client-id-input" placeholder="Paste your Client ID here (e.g. 123456789-abc.apps.googleusercontent.com)" />
+  <div class="btn-row">
+    <button class="primary" onclick="saveClientId()">Save & connect to Drive</button>
+  </div>
+</div>
 
-  <!-- MAIN -->
-  <main>
+<!-- Step 2: Scan -->
+<div class="card hidden" id="card-scan">
+  <h2><span class="step-num" id="num2">2</span> Scan your Drive</h2>
+  <p style="font-size:0.88rem; color:#666; margin-bottom:0.75rem;">Connected as <strong id="user-email"></strong>. Click Scan to list all files in your Drive (up to 1000). No files are moved yet.</p>
+  <div class="btn-row">
+    <button class="primary" onclick="scanDrive()" id="btn-scan">Scan Drive files</button>
+    <button onclick="signOut()" style="color:#c0392b; border-color:#c0392b;">Sign out</button>
+  </div>
+  <div class="progress-bar hidden" id="scan-progress"><div class="progress-fill" id="scan-fill" style="width:0%"></div></div>
+  <div class="log hidden" id="scan-log"></div>
+</div>
 
-    <!-- MOBILE TOC -->
-    <div class="mobile-toc" id="mobile-toc">
-      <button class="mobile-toc-toggle" onclick="document.getElementById('mobile-toc').classList.toggle('open')" aria-expanded="false">
-        Jump to section
-        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="mobile-toc-body">
-        <a href="#overview">Overview</a>
-        <a href="#foundation">Layer 1 — Foundation</a>
-        <a href="#f1" class="toc-indent">Physical stability</a>
-        <a href="#f2" class="toc-indent">Sensory &amp; environment</a>
-        <a href="#f3" class="toc-indent">Sense of safety</a>
-        <a href="#regulatory">Layer 2 — Regulatory</a>
-        <a href="#r1" class="toc-indent">Nervous system signaling</a>
-        <a href="#r2" class="toc-indent">Neuroimmune regulation</a>
-        <a href="#r3" class="toc-indent">Adaptogens &amp; gut</a>
-        <a href="#support">Layer 3 — Support</a>
-        <a href="#s1" class="toc-indent">Mitochondrial energy</a>
-        <a href="#s2" class="toc-indent">Antioxidant / glutathione</a>
-        <a href="#s3" class="toc-indent">Lymphatic &amp; detox</a>
-        <a href="#s4" class="toc-indent">Vitamin D &amp; seasonal</a>
-        <a href="#hypothesis">Working hypothesis</a>
-      </div>
-    </div>
+<!-- Step 3: Plan -->
+<div class="card hidden" id="card-plan">
+  <h2><span class="step-num" id="num3">3</span> Review organization plan</h2>
+  <p style="font-size:0.88rem; color:#666; margin-bottom:0.75rem;">AI has classified your files. Review the plan before anything is moved. Uncheck any file to skip it.</p>
+  <div id="plan-summary" style="margin-bottom:1rem; font-size:0.88rem; color:#444;"></div>
+  <div style="overflow-x:auto;">
+    <table class="plan-table" id="plan-table">
+      <thead><tr><th style="width:32px;"></th><th>File name</th><th>Current location</th><th>Proposed folder</th></tr></thead>
+      <tbody id="plan-body"></tbody>
+    </table>
+  </div>
+  <div class="btn-row" style="margin-top:1.25rem;">
+    <button class="primary" onclick="executePlan()" id="btn-execute">Move files now</button>
+    <button onclick="rescan()">Re-scan</button>
+  </div>
+</div>
 
-    <!-- HERO -->
-    <header class="hero" id="overview">
-      <div class="hero-badge">ME/CFS Management</div>
-      <h1>Stabilization Protocol</h1>
-      <p class="hero-subtitle">A layered approach to reducing persistent danger signaling, supporting mitochondrial energy production, and improving autonomic stability in ME/CFS and Long COVID.</p>
-      <div class="hero-note">
-        <strong>Note:</strong> This protocol reflects personal research and lived experience. It is shared for informational purposes only — not as medical advice. Discuss any new supplements or interventions with your physician before starting, especially if you take prescription medications.
-      </div>
-    </header>
-
-    <!-- ══════════════════════════════════════
-         LAYER 1 — FOUNDATION
-    ══════════════════════════════════════ -->
-    <section id="foundation">
-      <div class="layer-header foundation">
-        <div class="layer-label">Layer 1 of 3</div>
-        <h2>Foundational Layer — Baseline Support</h2>
-        <p class="purpose">Establish conditions that allow recovery. <strong>This layer must come first.</strong> Without it, other interventions are unlikely to produce lasting improvement.</p>
-      </div>
-
-      <!-- F1 -->
-      <div class="step-card foundation open" id="f1">
-        <button class="step-toggle" onclick="toggleCard(this)" aria-expanded="true">
-          <div class="step-toggle-left">
-            <span class="step-num">1</span>
-            <div>
-              <div class="step-title">Physical Stability</div>
-              <div class="step-summary">Pacing, sleep, hydration, nutrition</div>
-            </div>
-          </div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="step-body">
-          <div class="field-label">Key principles</div>
-          <ul class="bullets">
-            <li>Strict pacing — stay within your energy envelope at all times</li>
-            <li>Consistent sleep and wake timing every day</li>
-            <li>Daily rest period or nap (non-negotiable)</li>
-            <li>Minimize autonomic spikes (sudden exertion, temperature shifts, stress)</li>
-            <li>Avoid PEM — going one year without PEM can significantly support recovery</li>
-            <li>Hydration: 2–3 litres of filtered water daily</li>
-            <li>Include electrolytes; add salt if you experience orthostatic symptoms</li>
-            <li>Prioritize protein at each meal; include healthy fats</li>
-            <li>Keep carbohydrates lower and stable to prevent blood sugar swings</li>
-            <li>Take a daily multivitamin</li>
-          </ul>
-          <div class="field-label">Tools</div>
-          <ul class="bullets">
-            <li>Pacing app (e.g. Visible) with heart rate monitor</li>
-            <li>Wearable for heart rate, stress, Body Battery, and HRV monitoring (e.g. Garmin)</li>
-            <li>Consistent daily rhythm — same structure each day</li>
-            <li>Optional: practical support through hired help and/or caregivers, if available</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- F2 -->
-      <div class="step-card foundation" id="f2">
-        <button class="step-toggle" onclick="toggleCard(this)" aria-expanded="false">
-          <div class="step-toggle-left">
-            <span class="step-num">2</span>
-            <div>
-              <div class="step-title">Environmental &amp; Sensory Load</div>
-              <div class="step-summary">Reduce inputs that trigger nervous system stress</div>
-            </div>
-          </div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="step-body">
-          <div class="field-label">Key principles</div>
-          <ul class="bullets">
-            <li>Reduce sensory overwhelm — noise, bright light, visual clutter</li>
-            <li>Maintain predictable routines and environments</li>
-            <li>Simplify surroundings to reduce cognitive load</li>
-            <li>Create calm, low-demand spaces for rest and recovery</li>
-          </ul>
-          <div class="field-label">Practices</div>
-          <ul class="bullets">
-            <li>Structured home environment — order reduces cognitive cost</li>
-            <li>Use calming sensory supports: soft lighting, controlled sound, comfortable temperature</li>
-            <li>Limit exposure to chaotic or overstimulating environments where possible</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- F3 -->
-      <div class="step-card foundation" id="f3">
-        <button class="step-toggle" onclick="toggleCard(this)" aria-expanded="false">
-          <div class="step-toggle-left">
-            <span class="step-num">3</span>
-            <div>
-              <div class="step-title">Sense of Safety</div>
-              <div class="step-summary">Reduce internal threat signaling</div>
-            </div>
-          </div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="step-body">
-          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.75rem;">Emotional safety directly influences nervous system regulation. Reducing internal threat signals supports all other protocol layers.</p>
-          <div class="field-label">Key principles</div>
-          <ul class="bullets">
-            <li>Practice joy — small, genuine moments of enjoyment daily</li>
-            <li>Allow authentic self-expression; reduce masking where possible</li>
-            <li>Connect regularly with safe, loving people and/or animals</li>
-            <li>Gently process and release trauma over time</li>
-          </ul>
-          <div class="field-label">Practices</div>
-          <ul class="bullets">
-            <li>Intentional moments of play, creativity, or lightness</li>
-            <li>Relational connection: family, trusted friends, pets</li>
-            <li>Emotional processing: journaling, therapy, somatic work, EMDR, reflection</li>
-            <li>Environments and activities that feel safe and regulating</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="logic-block">
-        <h3>How the foundation supports ME/CFS stability</h3>
-        <div class="flow-grid">
-          <div class="flow-row"><span class="flow-arrow">→</span><span><strong>Physical load reduction</strong> — lowers physiological strain signals from overexertion, dehydration, blood sugar swings</span></div>
-          <div class="flow-row"><span class="flow-arrow">→</span><span><strong>Sensory load reduction</strong> — reduces autonomic spikes and external stress triggers</span></div>
-          <div class="flow-row"><span class="flow-arrow">→</span><span><strong>Internal safety signaling</strong> — reduces persistent threat interpretation in the nervous system</span></div>
-        </div>
-        <p style="margin-top:0.875rem; font-size:0.83rem; color:var(--text-muted);">Together: lower baseline inflammation → more stable autonomic regulation → reduced mitochondrial stress signaling → fewer crashes, more predictable daily function.</p>
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════
-         LAYER 2 — REGULATORY
-    ══════════════════════════════════════ -->
-    <section id="regulatory">
-      <div class="layer-header regulatory">
-        <div class="layer-label">Layer 2 of 3</div>
-        <h2>Regulatory Layer — System Regulation</h2>
-        <p class="purpose">Reduce upstream signaling that keeps the body in a defensive "threat-on" state. Only effective when the foundation layer is in place.</p>
-      </div>
-
-      <!-- R1 -->
-      <div class="step-card regulatory" id="r1">
-        <button class="step-toggle" onclick="toggleCard(this)" aria-expanded="false">
-          <div class="step-toggle-left">
-            <span class="step-num">1</span>
-            <div>
-              <div class="step-title">Nervous System Safety Signaling</div>
-              <div class="step-summary">Reduce persistent threat perception</div>
-            </div>
-          </div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="step-body">
-
-          <div class="sub-section">
-            <div class="sub-heading">Nicotine patch (low dose)</div>
-            <div class="field-label">Possible mechanisms</div>
-            <ul class="bullets">
-              <li>Stimulates alpha-7 nicotinic acetylcholine receptors</li>
-              <li>Activates the cholinergic anti-inflammatory pathway</li>
-              <li>Suppresses excess cytokine signaling</li>
-              <li>May reduce microglial activation</li>
-            </ul>
-            <div class="field-label">Typical patient approach</div>
-            <ul class="bullets">
-              <li>Low-dose patch, worn continuously with periodic breaks</li>
-              <li>Discontinue if not well-tolerated</li>
-            </ul>
-            <div class="note-box caution"><strong>Note:</strong> Discuss with your physician before starting. This is an off-label use.</div>
-          </div>
-
-          <div class="sub-section">
-            <div class="sub-heading">Hypnosis / deep relaxation audio</div>
-            <div class="field-label">Purpose</div>
-            <ul class="bullets">
-              <li>Reinforce parasympathetic dominance</li>
-              <li>Retrain brain threat-prediction networks</li>
-            </ul>
-            <div class="field-label">Likely mechanisms</div>
-            <ul class="bullets">
-              <li>Reduced amygdala threat activation</li>
-              <li>Increased vagal tone</li>
-              <li>Decreased cortisol and sympathetic drive</li>
-            </ul>
-            <div class="note-box info">Daily use over weeks may gradually retrain the nervous system toward a stable baseline state.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- R2 -->
-      <div class="step-card regulatory" id="r2">
-        <button class="step-toggle" onclick="toggleCard(this)" aria-expanded="false">
-          <div class="step-toggle-left">
-            <span class="step-num">2</span>
-            <div>
-              <div class="step-title">Neuroimmune Regulation</div>
-              <div class="step-summary">Reduce microglial and immune activation</div>
-            </div>
-          </div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="step-body">
-          <div class="sub-section">
-            <div class="sub-heading">Low Dose Naltrexone (LDN)</div>
-            <div class="field-label">Proposed mechanisms</div>
-            <ul class="bullets">
-              <li>Transient opioid receptor blockade → rebound endorphin release</li>
-              <li>Suppression of microglial activation</li>
-              <li>Reduced pro-inflammatory cytokines</li>
-            </ul>
-            <div class="field-label">Potential benefits</div>
-            <ul class="bullets">
-              <li>Reduced neuroinflammation</li>
-              <li>Improved sleep quality</li>
-              <li>Reduced pain</li>
-              <li>Improved energy stability</li>
-            </ul>
-            <div class="note-box caution"><strong>Note:</strong> LDN requires a prescription. Re-establishment after a pause takes 4–6 weeks; subjective impression during that window is not a reliable signal of effectiveness.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- R3 -->
-      <div class="step-card regulatory" id="r3">
-        <button class="step-toggle" onclick="toggleCard(this)" aria-expanded="false">
-          <div class="step-toggle-left">
-            <span class="step-num">3</span>
-            <div>
-              <div class="step-title">Adaptogens &amp; Gut Support</div>
-              <div class="step-summary">Stabilize stress signaling and immune balance</div>
-            </div>
-          </div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="step-body">
-
-          <div class="sub-section">
-            <div class="sub-heading">Eleuthero (Siberian ginseng)</div>
-            <ul class="bullets">
-              <li>HPA-axis regulation</li>
-              <li>Improved stress tolerance</li>
-              <li>Mild mitochondrial support</li>
-            </ul>
-          </div>
-
-          <div class="sub-section">
-            <div class="sub-heading">Astragalus</div>
-            <ul class="bullets">
-              <li>Immune modulation</li>
-              <li>Antiviral signaling support</li>
-              <li>Mitochondrial protection</li>
-            </ul>
-          </div>
-
-          <div class="sub-section">
-            <div class="sub-heading">Medicinal mushroom powder</div>
-            <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:0.4rem;">Contains beta-glucans and polysaccharides.</p>
-            <ul class="bullets">
-              <li>Immune balancing</li>
-              <li>Microglial regulation</li>
-              <li>Antioxidant activity</li>
-            </ul>
-          </div>
-
-          <div class="sub-section">
-            <div class="sub-heading">Kefir (gut + immune support)</div>
-            <ul class="bullets">
-              <li>Supports gut microbiome through probiotics</li>
-              <li>Improves gut barrier function and digestion</li>
-              <li>Influences immune signaling via the gut-immune axis</li>
-            </ul>
-            <div class="note-box info">Combining kefir with adaptogen powders (e.g. in a smoothie with berries) appears more effective than adaptogens alone — likely improves absorption and overall system response.</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════
-         LAYER 3 — SUPPORT
-    ══════════════════════════════════════ -->
-    <section id="support">
-      <div class="layer-header support">
-        <div class="layer-label">Layer 3 of 3</div>
-        <h2>Support Layer — Capacity &amp; Recovery</h2>
-        <p class="purpose">Support energy production, reduce secondary stress signals, and assist recovery. Only effective when layers 1 and 2 are in place.</p>
-      </div>
-
-      <!-- S1 -->
-      <div class="step-card support" id="s1">
-        <button class="step-toggle" onclick="toggleCard(this)" aria-expanded="false">
-          <div class="step-toggle-left">
-            <span class="step-num">1</span>
-            <div>
-              <div class="step-title">Mitochondrial Energy Support</div>
-              <div class="step-summary">Improve cellular ATP production and efficiency</div>
-            </div>
-          </div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="step-body">
-
-          <div class="sub-section">
-            <div class="sub-heading">CoQ10</div>
-            <ul class="bullets">
-              <li>Core component of the mitochondrial electron transport chain</li>
-              <li>Supports ATP generation; reduces oxidative stress</li>
-            </ul>
-          </div>
-
-          <div class="sub-section">
-            <div class="sub-heading">Acetyl-L-Carnitine (ALCAR)</div>
-            <ul class="bullets">
-              <li>Transports fatty acids into mitochondria for energy production</li>
-              <li>Supports acetylcholine production</li>
-              <li>May improve cognitive clarity and reduce fatigue</li>
-            </ul>
-          </div>
-
-          <div class="sub-section">
-            <div class="sub-heading">NADH</div>
-            <ul class="bullets">
-              <li>Directly feeds electrons into mitochondrial complex I</li>
-              <li>Supports cellular ATP generation upstream of CoQ10</li>
-            </ul>
-          </div>
-
-          <div class="note-box synergy">
-            <strong>Synergy:</strong> NADH → CoQ10 → ALCAR support three different stages of mitochondrial energy metabolism. Together they address both fuel delivery and ATP production.
-          </div>
-        </div>
-      </div>
-
-      <!-- S2 -->
-      <div class="step-card support" id="s2">
-        <button class="step-toggle" onclick="toggleCard(this)" aria-expanded="false">
-          <div class="step-toggle-left">
-            <span class="step-num">2</span>
-            <div>
-              <div class="step-title">Antioxidant &amp; Glutathione Support</div>
-              <div class="step-summary">NAC + Glycine + Vitamin C combined protocol</div>
-            </div>
-          </div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="step-body">
-          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.75rem;">These three are taken together to support glutathione production and recycling — a key cellular antioxidant system.</p>
-
-          <div class="sub-section">
-            <div class="sub-heading">NAC (N-acetylcysteine)</div>
-            <ul class="bullets">
-              <li>Provides cysteine — a required building block for glutathione</li>
-              <li>Supports antioxidant defense systems</li>
-            </ul>
-          </div>
-
-          <div class="sub-section">
-            <div class="sub-heading">Glycine</div>
-            <ul class="bullets">
-              <li>Second required building block for glutathione synthesis</li>
-              <li>Supports nervous system calming and sleep quality</li>
-              <li>3g at bedtime leverages dual role: glutathione precursor + sleep support</li>
-            </ul>
-          </div>
-
-          <div class="sub-section">
-            <div class="sub-heading">Vitamin C</div>
-            <ul class="bullets">
-              <li>Recycles oxidized glutathione back to its active form</li>
-              <li>Cofactor for carnitine synthesis — links to mitochondrial fuel delivery</li>
-              <li>Supports mitochondrial membrane integrity</li>
-              <li>Sodium ascorbate form adds sodium, supporting POTS/orthostatic symptoms</li>
-            </ul>
-            <div class="field-label">Dosing notes</div>
-            <ul class="bullets">
-              <li>Distribute across the day in 1–2g increments; do not take a single large bolus</li>
-              <li>Titrate upward slowly; reduce by 1–2g if loose stools occur</li>
-              <li>Sodium ascorbate and liposomal forms are better tolerated than ascorbic acid, especially without food</li>
-              <li>Separate from medications by 30–60 minutes</li>
-            </ul>
-          </div>
-
-          <div class="sub-section">
-            <div class="sub-heading">Alpha Lipoic Acid (ALA) — optional, physician review required</div>
-            <ul class="bullets">
-              <li>Cofactor for pyruvate dehydrogenase — fills a gap not addressed by CoQ10, NADH, or ALCAR</li>
-              <li>Recycles glutathione, vitamin C, and vitamin E back to active forms</li>
-              <li>Crosses the blood-brain barrier; reduces microglial activation</li>
-            </ul>
-            <div class="note-box caution"><strong>Caution:</strong> ALA may affect thyroid hormone metabolism (T3/T4 conversion). Physician review is required before trialing if you have a thyroid condition or take thyroid-related medications.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- S3 -->
-      <div class="step-card support" id="s3">
-        <button class="step-toggle" onclick="toggleCard(this)" aria-expanded="false">
-          <div class="step-toggle-left">
-            <span class="step-num">3</span>
-            <div>
-              <div class="step-title">Lymphatic &amp; Detox Support</div>
-              <div class="step-summary">Gentle fluid movement and clearance</div>
-            </div>
-          </div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="step-body">
-          <div class="sub-section">
-            <div class="sub-heading">Lymphatic support</div>
-            <ul class="bullets">
-              <li>Lymphatic rebounding (gentle, short duration)</li>
-              <li>Dry brushing (light pressure, brief)</li>
-            </ul>
-            <div class="note-box info">Consistency matters more than intensity. Stop before fatigue or symptom escalation.</div>
-          </div>
-
-          <div class="sub-section">
-            <div class="sub-heading">Gentle detox support</div>
-            <ul class="bullets">
-              <li>Herbal teas that support liver function: dandelion, milk thistle, ginger, peppermint</li>
-              <li>Aim for regular, low-effort consistency — not aggressive protocols</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- S4 -->
-      <div class="step-card support" id="s4">
-        <button class="step-toggle" onclick="toggleCard(this)" aria-expanded="false">
-          <div class="step-toggle-left">
-            <span class="step-num">4</span>
-            <div>
-              <div class="step-title">Vitamin D &amp; Seasonal Support</div>
-              <div class="step-summary">Offset winter immune, mitochondrial &amp; circadian disruption</div>
-            </div>
-          </div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="step-body">
-          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.75rem;">Many people with ME/CFS notice a seasonal pattern — better in summer, worse in winter. Vitamin D levels, circadian rhythm disruption, thermoregulation cost, and viral reactivation risk all vary with season and may contribute to this cycle.</p>
-
-          <div class="sub-section">
-            <div class="sub-heading">Vitamin D3 + K2 (MK-7)</div>
-            <div class="field-label">Why it matters</div>
-            <ul class="bullets">
-              <li>Vitamin D3 modulates T cell activity and reduces pro-inflammatory cytokines</li>
-              <li>Deficiency worsens in winter at northern latitudes — supplementation needs to compensate</li>
-              <li>K2 (MK-7 form) is a required cofactor — directs calcium to bones and away from arteries</li>
-              <li>Magnesium is required for enzymatic activation of vitamin D — ensure adequate magnesium intake</li>
-            </ul>
-            <div class="field-label">Practical guidance</div>
-            <ul class="bullets">
-              <li>Daily dosing maintains more stable serum levels than the same total dose taken 2–3 times per week</li>
-              <li>Take with a fat-containing meal — vitamin D is fat-soluble</li>
-              <li>Supplement year-round, not only in dark months</li>
-              <li>Target serum level: 50–80 ng/mL (test via 25-hydroxy vitamin D blood test)</li>
-              <li>K2 dose: 100–200 mcg/day as MK-7 form — discuss with physician</li>
-            </ul>
-          </div>
-
-          <div class="sub-section">
-            <div class="sub-heading">Morning light therapy</div>
-            <ul class="bullets">
-              <li>10,000 lux lamp within 1 hour of waking — stabilizes melatonin/cortisol rhythm</li>
-              <li>Start at 10 minutes and titrate up to 20–30 minutes as tolerated</li>
-              <li>Does not require looking directly at lamp — can be used during breakfast or rest</li>
-              <li>Stop if symptoms worsen — photosensitivity is a documented ME/CFS feature</li>
-            </ul>
-          </div>
-
-          <div class="sub-section">
-            <div class="sub-heading">Thermal load reduction</div>
-            <ul class="bullets">
-              <li>Thermoregulation in cold is a real metabolic energy cost that does not appear in pacing metrics</li>
-              <li>Heated blanket during rest eliminates the thermogenic cost of warming from cold</li>
-              <li>Layer clothing (especially extremities) rather than relying on room heating alone</li>
-            </ul>
-          </div>
-
-          <div class="sub-section">
-            <div class="sub-heading">Pre-emptive pacing reduction — start October</div>
-            <ul class="bullets">
-              <li>The November crash depletion curve begins during the high-function summer/fall phase</li>
-              <li>Reduce your pacing ceiling proactively from October 1 — regardless of how well you feel</li>
-              <li>Treat October as a mandatory transition buffer month, not an extension of summer</li>
-            </ul>
-          </div>
-
-          <div class="sub-section">
-            <div class="sub-heading">Holiday load pre-planning — November through January</div>
-            <ul class="bullets">
-              <li>The holiday period concentrates sensory, social, and logistical demands at the biological nadir of the year</li>
-              <li>Pre-negotiate reduced commitments before the season begins — not reactively</li>
-              <li>Delegate household and logistics tasks in advance of key events</li>
-              <li>Schedule mandatory recovery days around high-load events before they happen</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════
-         WORKING HYPOTHESIS
-    ══════════════════════════════════════ -->
-    <section class="hypothesis" id="hypothesis">
-      <h2>Working Hypothesis — The Danger Response Model</h2>
-
-      <p>Many ME/CFS and Long COVID researchers propose that the body becomes stuck in a persistent <em>danger response</em> state. This protocol is designed to interrupt that state at multiple points simultaneously.</p>
-
-      <div class="citation-box">
-        <strong>Key research:</strong> Liu Z, Hollmann C, Kalanidhi S, et al. Immunoglobulin G complexes from post-infectious ME/CFS, including post-COVID ME/CFS disrupt cellular energetics and alter inflammatory marker secretion. <em>Brain Behav Immun Health.</em> 2026 Feb 4;52:101187. doi: 10.1016/j.bbih.2026.101187. PMID: 41704659.
-      </div>
-
-      <div class="danger-state">
-        <h3>Key features of the danger response state</h3>
-        <ul class="bullets">
-          <li>Immune cells remain partially activated</li>
-          <li>Microglia in the brain stay sensitized</li>
-          <li>The autonomic nervous system favors sympathetic "alarm" signaling</li>
-          <li>Mitochondria shift toward defensive metabolism rather than efficient ATP production</li>
-          <li>Energy production becomes inefficient</li>
-        </ul>
-        <div style="margin-top:0.75rem; font-size:0.83rem; color:var(--text-muted);">
-          Result: fatigue, PEM, autonomic instability, cognitive fog, non-restorative sleep.
-        </div>
-      </div>
-
-      <div class="sequence">
-        <h3>Why the sequence matters</h3>
-        <div class="seq-row">
-          <span class="seq-tag">Layer 1</span>
-          <span>Foundation — removes ongoing stress inputs first</span>
-        </div>
-        <div class="seq-row">
-          <span class="seq-tag">Layer 2</span>
-          <span>Regulatory — reduces upstream danger signaling (nervous system + immune)</span>
-        </div>
-        <div class="seq-row">
-          <span class="seq-tag">Layer 3</span>
-          <span>Support — improves cellular function and recovery capacity</span>
-        </div>
-        <p style="margin-top:0.875rem; font-size:0.83rem; color:var(--teal-dark);">This order ensures stability is established before capacity is increased, and that signaling is regulated before metabolic demand is raised.</p>
-      </div>
-    </section>
-
-    <footer>
-      <p>This protocol is shared for informational purposes based on personal research and experience with ME/CFS. It is not a substitute for medical advice. Always discuss new interventions with a qualified healthcare provider, particularly if you take prescription medications or have other health conditions.</p>
-    </footer>
-
-  </main>
+<!-- Step 4: Execute -->
+<div class="card hidden" id="card-execute">
+  <h2><span class="step-num" id="num4">4</span> Moving files</h2>
+  <div class="progress-bar" style="margin-bottom:0.75rem;"><div class="progress-fill" id="exec-fill" style="width:0%"></div></div>
+  <div class="log" id="exec-log"></div>
+  <div class="btn-row hidden" id="exec-done-row">
+    <button class="primary" onclick="location.reload()">Start over</button>
+  </div>
 </div>
 
 <script>
-function toggleCard(btn) {
-  const card = btn.closest('.step-card');
-  const isOpen = card.classList.contains('open');
-  card.classList.toggle('open', !isOpen);
-  btn.setAttribute('aria-expanded', !isOpen);
+const SCOPES = 'https://www.googleapis.com/auth/drive';
+const CATEGORY_COLORS = {
+  'Schedules & Planning': 'badge-blue',
+  'Health & Diet': 'badge-green',
+  'Business': 'badge-amber',
+  'Financial': 'badge-purple',
+  'Family & Personal': 'badge-red',
+  'Reference & Notes': 'badge-gray',
+  'Uncategorized': 'badge-gray'
+};
+
+let tokenClient, accessToken, allFiles = [], plan = [];
+
+document.getElementById('origin-display').textContent = location.origin;
+
+function saveClientId() {
+  const id = document.getElementById('client-id-input').value.trim();
+  if (!id) { alert('Please paste your Client ID first.'); return; }
+  localStorage.setItem('drive_organizer_client_id', id);
+  loadGapi(id);
 }
 
-const tocLinks = document.querySelectorAll('.sidebar a, .mobile-toc-body a');
-const sections = ['overview','foundation','f1','f2','f3','regulatory','r1','r2','r3','support','s1','s2','s3','s4','hypothesis'];
+function loadGapi(clientId) {
+  const s1 = document.createElement('script');
+  s1.src = 'https://accounts.google.com/gsi/client';
+  s1.onload = () => initGsi(clientId);
+  document.head.appendChild(s1);
+  const s2 = document.createElement('script');
+  s2.src = 'https://apis.google.com/js/api.js';
+  s2.onload = () => gapi.load('client', initGapiClient);
+  document.head.appendChild(s2);
+}
 
-function updateToc() {
-  let current = '';
-  sections.forEach(id => {
-    const el = document.getElementById(id);
-    if (el && el.getBoundingClientRect().top <= 120) current = id;
-  });
-  tocLinks.forEach(a => {
-    const href = a.getAttribute('href').slice(1);
-    a.classList.toggle('active', href === current);
+function initGapiClient() {
+  gapi.client.init({}).then(() => {
+    gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest');
   });
 }
 
-window.addEventListener('scroll', updateToc, { passive: true });
-updateToc();
+function initGsi(clientId) {
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: clientId,
+    scope: SCOPES,
+    callback: (resp) => {
+      if (resp.error) { alert('Auth error: ' + resp.error); return; }
+      accessToken = resp.access_token;
+      fetchUserInfo();
+    }
+  });
+  tokenClient.requestAccessToken();
+}
+
+function fetchUserInfo() {
+  fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+    headers: { Authorization: 'Bearer ' + accessToken }
+  }).then(r => r.json()).then(info => {
+    document.getElementById('user-email').textContent = info.email || 'your account';
+    document.getElementById('card-setup').classList.add('hidden');
+    document.getElementById('card-scan').classList.remove('hidden');
+    document.getElementById('num1').classList.add('done');
+  });
+}
+
+function signOut() {
+  google.accounts.oauth2.revoke(accessToken, () => location.reload());
+}
+
+function appendLog(logId, msg, cls='info') {
+  const log = document.getElementById(logId);
+  log.classList.remove('hidden');
+  const line = document.createElement('div');
+  line.className = cls;
+  line.textContent = msg;
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+}
+
+async function scanDrive() {
+  document.getElementById('btn-scan').disabled = true;
+  document.getElementById('scan-progress').classList.remove('hidden');
+  appendLog('scan-log', 'Fetching file list from Google Drive...', 'head');
+  allFiles = [];
+  let pageToken = null;
+  let fetched = 0;
+  const fields = 'nextPageToken,files(id,name,mimeType,parents,trashed)';
+  try {
+    do {
+      let url = `https://www.googleapis.com/drive/v3/files?pageSize=100&fields=${encodeURIComponent(fields)}&q=trashed=false and 'me' in owners`;
+      if (pageToken) url += '&pageToken=' + pageToken;
+      const resp = await fetch(url, { headers: { Authorization: 'Bearer ' + accessToken } });
+      const data = await resp.json();
+      if (data.error) throw new Error(data.error.message);
+      const files = (data.files || []).filter(f => f.mimeType !== 'application/vnd.google-apps.folder');
+      allFiles = allFiles.concat(files);
+      fetched += files.length;
+      pageToken = data.nextPageToken || null;
+      const pct = Math.min(90, Math.round(fetched / 10));
+      document.getElementById('scan-fill').style.width = pct + '%';
+      appendLog('scan-log', `Retrieved ${fetched} files so far...`, 'info');
+    } while (pageToken && allFiles.length < 1000);
+    document.getElementById('scan-fill').style.width = '100%';
+    appendLog('scan-log', `Done. Found ${allFiles.length} files. Classifying with AI...`, 'ok');
+    classifyFiles();
+  } catch(e) {
+    appendLog('scan-log', 'Error: ' + e.message, 'err');
+    document.getElementById('btn-scan').disabled = false;
+  }
+}
+
+function classifyFiles() {
+  const RULES = [
+    { folder: 'Schedules & Planning', patterns: [/schedul/i,/planner/i,/calendar/i,/agenda/i,/routine/i,/timeline/i,/daily plan/i,/weekly/i,/timetable/i,/itinerary/i,/block/i,/roster/i,/rota\b/i] },
+    { folder: 'Health & Diet', patterns: [/health/i,/diet/i,/food log/i,/meal/i,/nutrition/i,/calorie/i,/supplement/i,/vitamin/i,/medical/i,/doctor/i,/rx\b/i,/prescription/i,/exercise/i,/workout/i,/fitness/i,/wellness/i,/weight/i,/macro/i,/protein/i,/carb/i,/glucose/i,/lab result/i,/blood/i] },
+    { folder: 'Business', patterns: [/LLC/i,/contract/i,/invoice/i,/client/i,/proposal/i,/marketing/i,/product/i,/operations/i,/vendor/i,/supplier/i,/business/i,/company/i,/team/i,/employee/i,/hire/i,/onboard/i,/policy/i,/sop\b/i,/procedure/i,/project/i,/scope/i,/deliverable/i,/meeting notes/i,/minutes/i] },
+    { folder: 'Financial', patterns: [/budget/i,/finance/i,/financial/i,/tax/i,/expense/i,/income/i,/receipt/i,/bank/i,/statement/i,/account/i,/invoice/i,/payment/i,/payroll/i,/ledger/i,/1099/i,/w-?2/i,/k-?1/i,/1065/i,/profit/i,/loss/i,/p&l/i,/cash flow/i,/balance sheet/i,/spend/i,/saving/i,/loan/i,/debt/i,/credit/i,/qube/i,/goodbudget/i,/envelope/i] },
+    { folder: 'Family & Personal', patterns: [/family/i,/personal/i,/kid/i,/child/i,/daughter/i,/son/i,/pet/i,/mouse/i,/mice/i,/household/i,/home/i,/memory/i,/memories/i,/journal/i,/diary/i,/letter/i,/photo/i,/holiday/i,/birthday/i,/christmas/i,/prayer/i,/faith/i,/church/i,/catholic/i,/saint/i,/liturgy/i,/lent/i,/advent/i] },
+    { folder: 'Reference & Notes', patterns: [/note/i,/reference/i,/template/i,/research/i,/how.?to/i,/guide/i,/resource/i,/info/i,/list/i,/draft/i,/misc/i,/general/i,/read/i,/article/i,/summary/i] }
+  ];
+
+  appendLog('scan-log', 'Classifying files by name...', 'info');
+  const classifications = allFiles.map((f, i) => {
+    const name = f.name;
+    for (const rule of RULES) {
+      if (rule.patterns.some(p => p.test(name))) {
+        return { index: i, folder: rule.folder };
+      }
+    }
+    return { index: i, folder: 'Uncategorized' };
+  });
+
+  const uncategorized = classifications.filter(c => c.folder === 'Uncategorized').length;
+  appendLog('scan-log', `Classification complete. ${classifications.length - uncategorized} files matched, ${uncategorized} uncategorized.`, 'ok');
+  buildPlan(classifications);
+}
+
+function buildPlan(classifications) {
+  plan = classifications.map(c => {
+    const file = allFiles[c.index];
+    if (!file) return null;
+    return { file, folder: c.folder, include: true };
+  }).filter(Boolean);
+
+  document.getElementById('card-scan').classList.add('hidden');
+  document.getElementById('num2').classList.add('done');
+  document.getElementById('card-plan').classList.remove('hidden');
+
+  const folderCounts = {};
+  plan.forEach(p => { folderCounts[p.folder] = (folderCounts[p.folder] || 0) + 1; });
+  const summary = Object.entries(folderCounts).map(([f, n]) => `${f}: ${n}`).join(' · ');
+  document.getElementById('plan-summary').textContent = `${plan.length} files → ${Object.keys(folderCounts).length} folders   |   ${summary}`;
+
+  const tbody = document.getElementById('plan-body');
+  tbody.innerHTML = '';
+  plan.forEach((p, i) => {
+    const badgeClass = CATEGORY_COLORS[p.folder] || 'badge-gray';
+    const parentNote = p.file.parents ? '' : '<span style="color:#aaa">root</span>';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="checkbox" checked onchange="plan[${i}].include = this.checked" /></td>
+      <td style="max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${escHtml(p.file.name)}">${escHtml(p.file.name)}</td>
+      <td>${parentNote}</td>
+      <td><span class="badge ${badgeClass}">${escHtml(p.folder)}</span></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function executePlan() {
+  document.getElementById('btn-execute').disabled = true;
+  document.getElementById('card-plan').classList.add('hidden');
+  document.getElementById('num3').classList.add('done');
+  document.getElementById('card-execute').classList.remove('hidden');
+
+  const selected = plan.filter(p => p.include);
+  appendLog('exec-log', `Starting: ${selected.length} files to move.`, 'head');
+
+  const folderIds = {};
+  const uniqueFolders = [...new Set(selected.map(p => p.folder))];
+  appendLog('exec-log', `Creating ${uniqueFolders.length} folders...`, 'info');
+
+  for (const folderName of uniqueFolders) {
+    try {
+      const searchResp = await fetch(
+        `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(`name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false`)}&fields=files(id,name)`,
+        { headers: { Authorization: 'Bearer ' + accessToken } }
+      );
+      const searchData = await searchResp.json();
+      if (searchData.files && searchData.files.length > 0) {
+        folderIds[folderName] = searchData.files[0].id;
+        appendLog('exec-log', `  Folder exists: "${folderName}"`, 'info');
+      } else {
+        const createResp = await fetch('https://www.googleapis.com/drive/v3/files', {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + accessToken, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: folderName, mimeType: 'application/vnd.google-apps.folder' })
+        });
+        const created = await createResp.json();
+        folderIds[folderName] = created.id;
+        appendLog('exec-log', `  Created folder: "${folderName}"`, 'ok');
+      }
+    } catch(e) {
+      appendLog('exec-log', `  Error creating "${folderName}": ${e.message}`, 'err');
+    }
+  }
+
+  let moved = 0, failed = 0;
+  for (let i = 0; i < selected.length; i++) {
+    const { file, folder } = selected[i];
+    const folderId = folderIds[folder];
+    if (!folderId) { failed++; continue; }
+    try {
+      const currentParents = file.parents ? file.parents.join(',') : '';
+      let url = `https://www.googleapis.com/drive/v3/files/${file.id}?addParents=${folderId}&fields=id,parents`;
+      if (currentParents) url += `&removeParents=${currentParents}`;
+      const resp = await fetch(url, {
+        method: 'PATCH',
+        headers: { Authorization: 'Bearer ' + accessToken, 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      });
+      if (!resp.ok) throw new Error((await resp.json()).error?.message || resp.status);
+      moved++;
+      appendLog('exec-log', `  Moved: ${file.name} → ${folder}`, 'ok');
+    } catch(e) {
+      failed++;
+      appendLog('exec-log', `  Failed: ${file.name} — ${e.message}`, 'err');
+    }
+    document.getElementById('exec-fill').style.width = Math.round(((i + 1) / selected.length) * 100) + '%';
+  }
+
+  appendLog('exec-log', `Done. ${moved} moved, ${failed} failed.`, 'head');
+  document.getElementById('num4').classList.add('done');
+  document.getElementById('exec-done-row').classList.remove('hidden');
+}
+
+function rescan() {
+  document.getElementById('card-plan').classList.add('hidden');
+  document.getElementById('card-scan').classList.remove('hidden');
+  document.getElementById('btn-scan').disabled = false;
+  document.getElementById('scan-log').innerHTML = '';
+  document.getElementById('scan-fill').style.width = '0%';
+}
+
+const savedId = localStorage.getItem('drive_organizer_client_id');
+if (savedId) {
+  document.getElementById('client-id-input').value = savedId;
+}
 </script>
 </body>
 </html>
